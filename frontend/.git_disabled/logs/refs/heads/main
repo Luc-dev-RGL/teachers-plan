@@ -1,0 +1,4 @@
+0000000000000000000000000000000000000000 7c0ed7208b8609a4a4db224ba375e00d9fe40a64 Jean-Luc Kouassi <smith00547986@gmail.com> 1776587651 +0000	commit (initial): Frontend complet - Teacher's Plan v1
+7c0ed7208b8609a4a4db224ba375e00d9fe40a64 7c0ed7208b8609a4a4db224ba375e00d9fe40a64 Jean-Luc Kouassi <smith00547986@gmail.com> 1776590203 +0000	Branch: renamed refs/heads/master to refs/heads/main
+7c0ed7208b8609a4a4db224ba375e00d9fe40a64 4662c87f0ad545ebe89150fb2ef0ca1e0c11f863 Jean-Luc Kouassi <smith00547986@gmail.com> 1776614972 +0000	commit: fix: correction auth, api.js, contextes, route connexion
+4662c87f0ad545ebe89150fb2ef0ca1e0c11f863 9e464118398e24bcf133dbcb11227b78d7025e20 Jean-Luc Kouassi <smith00547986@gmail.com> 1777070682 +0000	commit: Correction Version 2
