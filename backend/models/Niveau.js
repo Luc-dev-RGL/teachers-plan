@@ -4,14 +4,18 @@ export const NiveauModel = {
   findAll: async () => {
     const { rows } = await query(
       `SELECT n.*, f.nom as filiere_nom
-       FROM niveaux n LEFT JOIN filieres f ON n.filiere_id = f.id ORDER BY n.nom`
+       FROM niveaux n
+       LEFT JOIN filieres f ON n.filiere_id = f.id
+       ORDER BY n.nom ASC`
     );
     return rows;
   },
   findById: async (id) => {
     const { rows } = await query(
       `SELECT n.*, f.nom as filiere_nom
-       FROM niveaux n LEFT JOIN filieres f ON n.filiere_id = f.id WHERE n.id = $1`, [id]
+       FROM niveaux n
+       LEFT JOIN filieres f ON n.filiere_id = f.id
+       WHERE n.id = $1`, [id]
     );
     return rows[0];
   },
@@ -23,11 +27,12 @@ export const NiveauModel = {
     return rows[0];
   },
   update: async (id, data) => {
+    const allowedFields = ['code', 'nom', 'filiere_id', 'description'];
     const fields = [];
     const params = [];
     let idx = 1;
     for (const [key, val] of Object.entries(data)) {
-      if (val !== undefined) { fields.push(`${key} = $${idx++}`); params.push(val); }
+      if (val !== undefined && allowedFields.includes(key)) { fields.push(`${key} = $${idx++}`); params.push(val); }
     }
     if (!fields.length) return null;
     params.push(id);

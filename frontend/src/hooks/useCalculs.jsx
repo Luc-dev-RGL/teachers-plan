@@ -1,9 +1,9 @@
-const FACTEURS_DEFAUT = { CM: 1.5, TD: 1.0, TP: 1.0, Projet: 1.0 };
+const COEFFICIENTS_DEFAUT = { CM: 1.5, TD: 1.0, TP: 1.0, Projet: 1.0 };
 
-export function calculerHeuresEquivTD(heuresReelles, typeCours, equivalences = []) {
-  const equiv = equivalences.find((e) => e.type_cours === typeCours);
-  const facteur = equiv ? parseFloat(equiv.facteur) : (FACTEURS_DEFAUT[typeCours] || 1.0);
-  return parseFloat((heuresReelles * facteur).toFixed(2));
+export function calculerHeuresEquivTD(heuresReelles, typeHeure, equivalences = []) {
+  const equiv = equivalences.find((e) => e.type_heure === typeHeure);
+  const coefficient = equiv ? parseFloat(equiv.coefficient) : (COEFFICIENTS_DEFAUT[typeHeure] || 1.0);
+  return parseFloat((heuresReelles * coefficient).toFixed(2));
 }
 
 export function calculerMontant(heuresEquivTD, tauxHoraire) {
@@ -12,7 +12,7 @@ export function calculerMontant(heuresEquivTD, tauxHoraire) {
 
 export function calculerTotalHeures(seances, equivalences = []) {
   return seances.reduce((total, s) => {
-    return total + calculerHeuresEquivTD(s.duree_heures, s.type_cours, equivalences);
+    return total + calculerHeuresEquivTD(s.duree_heures, s.type_heure, equivalences);
   }, 0);
 }
 

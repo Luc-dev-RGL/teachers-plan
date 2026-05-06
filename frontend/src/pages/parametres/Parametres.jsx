@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import { useState, useEffect, useCallback } from 'react';
 import { Settings, Save, RefreshCw, ChevronRight, Building2, GraduationCap, DollarSign, Scale, Layers, Bell, Users, FileText, Plus, Pencil, Trash2, Check, X, Eye, Search, Download, Shield, Clock, AlertTriangle, CalendarDays, Mail, Phone, Globe, MapPin, UserCog, Activity, Star } from 'lucide-react';
 

@@ -17,16 +17,16 @@ export const exportHeuresExcel = async (req, res) => {
 
     const ExcelJS = (await import('exceljs')).default;
     const workbook = new ExcelJS.Workbook();
-    const sheet = workbook.addWorksheet('Heures Effectuées');
+    const sheet = workbook.addWorksheet('Heures Effectuees');
     sheet.columns = [
       { header: 'Matricule', key: 'matricule', width: 15 },
       { header: 'Nom', key: 'nom', width: 20 },
-      { header: 'Prénom', key: 'prenom', width: 20 },
+      { header: 'Prenom', key: 'prenom', width: 20 },
       { header: 'Grade', key: 'grade', width: 15 },
       { header: 'Type', key: 'type_heure', width: 12 },
       { header: 'Heures', key: 'nombre_heures', width: 10 },
       { header: 'Coeff.', key: 'coefficient', width: 8 },
-      { header: 'Hrs Équiv.', key: 'heures_equivalentes', width: 12 },
+      { header: 'Hrs Equiv.', key: 'heures_equivalentes', width: 12 },
     ];
     rows.forEach(row => sheet.addRow(row));
 
@@ -52,7 +52,7 @@ export const exportHeuresPdf = async (req, res) => {
        FROM heures_effectuees he
        JOIN enseignants e ON he.enseignant_id = e.id
        JOIN equivalences eq ON he.equivalence_id = eq.id
-       LEFT JOIN taux_horaire th ON th.grade = e.grade AND th.annee_academique_id = $1
+       LEFT JOIN taux_horaires th ON th.categorie = e.categorie AND th.annee_academique_id = $1
        WHERE he.annee_academique_id = $1
        GROUP BY e.matricule, e.nom, e.prenom, e.grade, th.montant
        ORDER BY e.nom`, [annee_academique_id]
@@ -64,10 +64,10 @@ export const exportHeuresPdf = async (req, res) => {
     res.setHeader('Content-Disposition', 'attachment; filename=heures_effectuees.pdf');
     doc.pipe(res);
 
-    doc.fontSize(18).text('Rapport des Heures Effectuées', { align: 'center' });
+    doc.fontSize(18).text('Rapport des Heures Effectuees', { align: 'center' });
     doc.moveDown(1);
 
-    const headers = ['Matricule', 'Nom', 'Prénom', 'Grade', 'Hrs Équiv.', 'Montant'];
+    const headers = ['Matricule', 'Nom', 'Prenom', 'Grade', 'Hrs Equiv.', 'Montant'];
     const colWidths = [80, 90, 90, 80, 70, 80];
     let y = doc.y;
 

@@ -16,16 +16,17 @@ export const AnneeAcademiqueModel = {
   create: async (data) => {
     const { rows } = await query(
       'INSERT INTO annees_academiques (libelle, date_debut, date_fin, en_cours) VALUES ($1, $2, $3, $4) RETURNING *',
-      [data.libelle, data.date_debut, data.date_fin, data.en_cours||false]
+      [data.libelle, data.date_debut, data.date_fin, data.en_cours || false]
     );
     return rows[0];
   },
   update: async (id, data) => {
+    const allowedFields = ['libelle', 'date_debut', 'date_fin', 'en_cours'];
     const fields = [];
     const params = [];
     let idx = 1;
     for (const [key, val] of Object.entries(data)) {
-      if (val !== undefined) { fields.push(`${key} = $${idx++}`); params.push(val); }
+      if (val !== undefined && allowedFields.includes(key)) { fields.push(`${key} = $${idx++}`); params.push(val); }
     }
     if (!fields.length) return null;
     params.push(id);

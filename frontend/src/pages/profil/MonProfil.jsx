@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import {
   User, Mail, Phone, Camera, Key, Shield, Clock,
   Save, X, Eye, EyeOff, CheckCircle, AlertTriangle,
@@ -215,7 +216,7 @@ export default function Profil() {
     localStorage.removeItem('token');
     localStorage.removeItem('token');
     localStorage.removeItem('tp_user');
-    window.location.href = '/login';
+    window.location.href = '/connexion';
   };
 
   const mdpForce = (val) => {

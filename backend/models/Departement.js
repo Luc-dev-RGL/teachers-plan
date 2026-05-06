@@ -17,11 +17,12 @@ export const DepartementModel = {
     return rows[0];
   },
   update: async (id, data) => {
+    const allowedFields = ['code', 'nom', 'description'];
     const fields = [];
     const params = [];
     let idx = 1;
     for (const [key, val] of Object.entries(data)) {
-      if (val !== undefined) { fields.push(`${key} = $${idx++}`); params.push(val); }
+      if (val !== undefined && allowedFields.includes(key)) { fields.push(`${key} = $${idx++}`); params.push(val); }
     }
     if (!fields.length) return null;
     params.push(id);

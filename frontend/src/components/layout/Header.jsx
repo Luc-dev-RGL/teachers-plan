@@ -106,19 +106,30 @@ export default function Header() {
 
   // ─── Fetch notifications ───
   const fetchNotifications = useCallback(async () => {
+    setNotifLoading(true);
     try {
-      setNotifLoading(true);
+      const token = getToken();
       const res = await axios.get('/api/notifications', {
-        headers: { Authorization: `Bearer ${getToken()}` },
+        headers: { Authorization: `Bearer ${token}` },
       });
-      if (res.data?.succes) {
-        setNotifications(res.data.donnees || []);
-        setNonLues(res.data.meta?.nonLues || 0);
+      const d = res.data;
+      if (d.success || d.succes) {
+        const list = d.data || d.donnees || [];
+        setNotifications(list);
+        setNonLues(list.filter(n => !n.lu).length);
       }
-    } catch {} finally { setNotifLoading(false); }
+    } catch (err) {
+      console.error('Erreur notifications:', err);
+    } finally {
+      setNotifLoading(false);
+    }
   }, []);
 
-  useEffect(() => { fetchNotifications(); }, [fetchNotifications]);
+  useEffect(() => {
+    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 60000);
+    return () => clearInterval(interval);
+  }, [fetchNotifications]);
 
   // ─── Search with debounce ───
   const handleSearch = (value) => {
@@ -131,8 +142,12 @@ export default function Header() {
         const res = await axios.get(`/api/search?q=${encodeURIComponent(value)}`, {
           headers: { Authorization: `Bearer ${getToken()}` },
         });
-        if (res.data?.succes && Array.isArray(res.data.donnees)) setSearchResults(res.data.donnees);
-        else setSearchResults([]);
+        const d = res.data;
+        if (d.success || d.succes) {
+          setSearchResults(d.data || d.donnees || []);
+        } else {
+          setSearchResults([]);
+        }
       } catch { setSearchResults([]); } finally { setSearchLoading(false); }
     }, 300);
   };

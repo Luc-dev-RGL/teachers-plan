@@ -3,7 +3,8 @@ import { query } from '../config/db.js';
 export const ClasseModel = {
   findAll: async () => {
     const { rows } = await query(
-      `SELECT c.*, n.nom as niveau_nom, f.nom as filiere_nom
+      `SELECT c.*, n.nom as niveau_nom, n.filiere_id,
+              f.nom as filiere_nom
        FROM classes c
        LEFT JOIN niveaux n ON c.niveau_id = n.id
        LEFT JOIN filieres f ON n.filiere_id = f.id
@@ -13,23 +14,29 @@ export const ClasseModel = {
   },
   findById: async (id) => {
     const { rows } = await query(
-      `SELECT c.*, n.nom as niveau_nom FROM classes c LEFT JOIN niveaux n ON c.niveau_id = n.id WHERE c.id = $1`, [id]
+      `SELECT c.*, n.nom as niveau_nom, n.filiere_id,
+              f.nom as filiere_nom
+       FROM classes c
+       LEFT JOIN niveaux n ON c.niveau_id = n.id
+       LEFT JOIN filieres f ON n.filiere_id = f.id
+       WHERE c.id = $1`, [id]
     );
     return rows[0];
   },
   create: async (data) => {
     const { rows } = await query(
       'INSERT INTO classes (code, nom, niveau_id, annee_academique_id, effectif_max) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [data.code, data.nom, data.niveau_id, data.annee_academique_id, data.effectif_max]
+      [data.code, data.nom, data.niveau_id, data.annee_academique_id, data.effectif_max || 0]
     );
     return rows[0];
   },
   update: async (id, data) => {
+    const allowedFields = ['code', 'nom', 'niveau_id', 'annee_academique_id', 'effectif_max'];
     const fields = [];
     const params = [];
     let idx = 1;
     for (const [key, val] of Object.entries(data)) {
-      if (val !== undefined) { fields.push(`${key} = $${idx++}`); params.push(val); }
+      if (val !== undefined && allowedFields.includes(key)) { fields.push(`${key} = $${idx++}`); params.push(val); }
     }
     if (!fields.length) return null;
     params.push(id);

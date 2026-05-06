@@ -3,11 +3,16 @@ import { query } from '../config/db.js';
 export const HeuresEffectueesModel = {
   findAll: async () => {
     const { rows } = await query(
-      `SELECT he.*, e.nom as enseignant_nom, e.prenom as enseignant_prenom,
-              eq.type_heure, eq.coefficient
+      `SELECT he.*, e.matricule, e.nom as enseignant_nom, e.prenom as enseignant_prenom,
+              eq.type_heure, eq.coefficient,
+              (he.nombre_heures * eq.coefficient) as heures_equivalentes,
+              u_saisie.email as saisie_par_email,
+              u_valide.email as valide_par_email
        FROM heures_effectuees he
        LEFT JOIN enseignants e ON he.enseignant_id = e.id
        LEFT JOIN equivalences eq ON he.equivalence_id = eq.id
+       LEFT JOIN utilisateurs u_saisie ON he.saisie_par = u_saisie.id
+       LEFT JOIN utilisateurs u_valide ON he.valide_par = u_valide.id
        ORDER BY he.date_saisie DESC`
     );
     return rows;
@@ -27,11 +32,13 @@ export const HeuresEffectueesModel = {
     return rows[0];
   },
   update: async (id, data) => {
+    const allowedFields = ['enseignant_id', 'equivalence_id', 'annee_academique_id',
+      'nombre_heures', 'mois', 'commentaire', 'validee', 'valide_par'];
     const fields = [];
     const params = [];
     let idx = 1;
     for (const [key, val] of Object.entries(data)) {
-      if (val !== undefined) { fields.push(`${key} = $${idx++}`); params.push(val); }
+      if (val !== undefined && allowedFields.includes(key)) { fields.push(`${key} = $${idx++}`); params.push(val); }
     }
     if (!fields.length) return null;
     params.push(id);

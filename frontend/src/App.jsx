@@ -3,6 +3,8 @@ import { AuthProvider, utiliserAuth } from './context/AuthContext.jsx';
 import { SidebarProvider } from './context/SidebarContext.jsx';
 
 import Connexion from "./pages/auth/Connexion.jsx";
+import MotDePasseOublie from "./pages/auth/MotDePasseOublie.jsx";
+import ReinitialiserMdp from "./pages/auth/ReinitialiserMdp.jsx";
 import TableauDeBord from "./pages/dashboard/TableauDeBord.jsx";
 import Enseignants from "./pages/enseignants/Enseignants.jsx";
 import Departements from "./pages/departements/Departements.jsx";
@@ -37,6 +39,8 @@ export default function App() {
       <SidebarProvider>
         <Routes>
           <Route path="/connexion" element={<Connexion />} />
+          <Route path="/mot-de-passe-oubli" element={<MotDePasseOublie />} />
+          <Route path="/reinitialiser-mot-de-passe" element={<ReinitialiserMdp />} />
           <Route element={<RoutePrivee><Layout /></RoutePrivee>}>
             <Route path="/" element={<TableauDeBord />} />
             <Route path="enseignants" element={<Enseignants />} />
