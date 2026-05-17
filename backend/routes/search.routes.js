@@ -28,14 +28,14 @@ export const rechercher = async (req, res) => {
         FROM filieres f LEFT JOIN departements d ON f.departement_id = d.id
         WHERE f.nom ILIKE $1 OR f.code ILIKE $1 ORDER BY f.nom LIMIT $2`, [term, limit]),
       query(`SELECT s.id, m.nom as matiere_nom, c.nom as classe_nom,
-          sa.nom as salle_nom, s.date_debut, e.nom as enseignant_nom, e.prenom as enseignant_prenom
+          sa.nom as salle_nom, s.date, s.heure_debut, e.nom as enseignant_nom, e.prenom as enseignant_prenom
         FROM seances_cours s
         LEFT JOIN enseignants e ON e.id = s.enseignant_id
         LEFT JOIN matieres m ON m.id = s.matiere_id
         LEFT JOIN classes c ON c.id = s.classe_id
         LEFT JOIN salles sa ON sa.id = s.salle_id
         WHERE m.nom ILIKE $1 OR c.nom ILIKE $1 OR e.nom ILIKE $1 OR e.prenom ILIKE $1
-        ORDER BY s.date_debut DESC LIMIT $2`, [term, limit]),
+        ORDER BY s.date DESC, s.heure_debut DESC LIMIT $2`, [term, limit]),
     ]);
 
     const donnees = [
@@ -45,7 +45,7 @@ export const rechercher = async (req, res) => {
       ...salles.rows.map(s => ({ type: 'salle', label: s.nom, sub: `${s.code} — Cap. ${s.capacite} — ${s.type}`, page: 'salles' })),
       ...departements.rows.map(d => ({ type: 'departement', label: d.nom, sub: d.code, page: 'departements' })),
       ...filieres.rows.map(f => ({ type: 'filiere', label: f.nom, sub: `${f.code}${f.departement_nom ? ` — ${f.departement_nom}` : ''}`, page: 'filieres' })),
-      ...seances.rows.map(s => ({ type: 'seance', label: `${s.matiere_nom} — ${s.classe_nom}`, sub: `${s.date_debut ? new Date(s.date_debut).toLocaleDateString('fr-FR') : ''} | ${s.salle_nom || ''} | ${s.enseignant_prenom} ${s.enseignant_nom}`, page: 'seances' })),
+      ...seances.rows.map(s => ({ type: 'seance', label: `${s.matiere_nom} — ${s.classe_nom}`, sub: `${s.date ? new Date(s.date).toLocaleDateString('fr-FR') : ''} | ${s.heure_debut || ''} | ${s.salle_nom || ''} | ${s.enseignant_prenom} ${s.enseignant_nom}`, page: 'seances' })),
     ];
 
     res.json({ success: true, data: donnees.slice(0, 20) });

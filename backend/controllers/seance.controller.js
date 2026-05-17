@@ -6,9 +6,9 @@ export { getAll, getById, update, remove };
 
 export const create = async (req, res) => {
   try {
-    if (req.body.salle_id && req.body.date_debut && req.body.date_fin) {
+    if (req.body.salle_id && req.body.date && req.body.heure_debut && req.body.heure_fin) {
       const conflicts = await SeanceCoursModel.checkConflict(
-        req.body.salle_id, req.body.date_debut, req.body.date_fin
+        req.body.salle_id, req.body.date, req.body.heure_debut, req.body.heure_fin
       );
       if (conflicts.length > 0) {
         return res.status(409).json({ success: false, message: 'Conflit de planning', conflicts });

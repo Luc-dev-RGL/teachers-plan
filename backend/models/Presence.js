@@ -4,7 +4,7 @@ export const PresenceModel = {
   findAll: async () => {
     const { rows } = await query(
       `SELECT p.*, e.matricule, e.nom as enseignant_nom, e.prenom as enseignant_prenom,
-              sc.date_debut as seance_date, m.nom as matiere_nom
+              sc.date as seance_date, sc.heure_debut, m.nom as matiere_nom
        FROM presences p
        LEFT JOIN enseignants e ON p.enseignant_id = e.id
        LEFT JOIN seances_cours sc ON p.seance_id = sc.id
