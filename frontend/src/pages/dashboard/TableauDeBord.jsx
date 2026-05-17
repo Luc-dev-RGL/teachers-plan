@@ -233,7 +233,7 @@ export default function TableauDeBord() {
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-[#0F2B46] truncate">{s.matiere_nom}</p>
                         <p className="text-xs text-gray-500 mt-0.5">{s.enseignant_prenom} {s.enseignant_nom}</p>
-                        <p className="text-xs text-gray-400 mt-0.5">{s.classe_nom} · {formatDate(s.date_debut)}</p>
+                        <p className="text-xs text-gray-400 mt-0.5">{s.classe_nom} · {formatDate(s.date)} {s.heure_debut}</p>
                       </div>
                       <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold whitespace-nowrap ${st.classe}`}>{st.label}</span>
                     </div>

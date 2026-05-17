@@ -29,7 +29,7 @@ router.get('/', async (req, res) => {
 
     // Séances récentes
     const recentsResult = await query(
-      `SELECT sc.id, sc.type_seance, sc.statut, sc.date_debut,
+      `SELECT sc.id, sc.type_seance, sc.statut, sc.date, sc.heure_debut,
               e.nom as enseignant_nom, e.prenom as enseignant_prenom,
               m.nom as matiere_nom,
               c.nom as classe_nom
@@ -37,7 +37,7 @@ router.get('/', async (req, res) => {
        LEFT JOIN enseignants e ON sc.enseignant_id = e.id
        LEFT JOIN matieres m ON sc.matiere_id = m.id
        LEFT JOIN classes c ON sc.classe_id = c.id
-       ORDER BY sc.date_debut DESC
+       ORDER BY sc.date DESC, sc.heure_debut DESC
        LIMIT 5`
     );
 

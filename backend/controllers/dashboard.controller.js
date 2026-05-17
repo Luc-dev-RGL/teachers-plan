@@ -20,7 +20,7 @@ export const statistiques = async (req, res) => {
       pool.query("SELECT COUNT(*) as total FROM enseignants WHERE statut = 'actif'"),
       pool.query('SELECT COUNT(*) as total FROM salles'),
       pool.query(`SELECT COUNT(*) as total FROM seances_cours
-        WHERE annee_academique_id = $1 AND to_char(CURRENT_DATE, 'YYYY-MM') = to_char(date_debut, 'YYYY-MM') AND statut != 'annulee'`, [annee.id]),
+        WHERE annee_academique_id = $1 AND to_char(CURRENT_DATE, 'YYYY-MM') = to_char(date, 'YYYY-MM') AND statut != 'annulee'`, [annee.id]),
       pool.query(`SELECT COALESCE(SUM(he.nombre_heures * eq.coefficient), 0) as total
         FROM heures_effectuees he LEFT JOIN equivalences eq ON eq.id = he.equivalence_id WHERE he.annee_academique_id = $1`, [annee.id]),
       pool.query(`SELECT COALESCE(SUM(COALESCE(p.heures_cm,0) + COALESCE(p.heures_td,0) + COALESCE(p.heures_tp,0)), 0) as total_prevues
@@ -31,7 +31,7 @@ export const statistiques = async (req, res) => {
         LEFT JOIN heures_effectuees he ON he.enseignant_id = e.id AND he.annee_academique_id = $1
         LEFT JOIN equivalences eq ON eq.id = he.equivalence_id
         GROUP BY d.id, d.nom, d.code ORDER BY heures DESC`, [annee.id]),
-      pool.query(`SELECT sc.date_debut, sc.type_seance, sc.statut,
+      pool.query(`SELECT sc.date, sc.heure_debut, sc.type_seance, sc.statut,
           e.nom as enseignant_nom, e.prenom as enseignant_prenom,
           m.nom as matiere_nom, c.nom as classe_nom
         FROM seances_cours sc
@@ -39,7 +39,7 @@ export const statistiques = async (req, res) => {
         LEFT JOIN matieres m ON m.id = sc.matiere_id
         LEFT JOIN classes c ON c.id = sc.classe_id
         WHERE sc.annee_academique_id = $1
-        ORDER BY sc.date_debut DESC LIMIT 10`, [annee.id]),
+        ORDER BY sc.date DESC, sc.heure_debut DESC LIMIT 10`, [annee.id]),
     ]);
 
     res.json({
