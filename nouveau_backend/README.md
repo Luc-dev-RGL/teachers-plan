@@ -286,4 +286,4 @@ Pour toute question ou problème, consultez la documentation complète ou contac
 
 ---
 
-**Teacher's Plan** - Système de gestion des emplois du temps © 2024
+**Teacher's Plan** - Système de gestion des emplois du temps © 2026
